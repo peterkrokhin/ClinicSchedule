@@ -32,10 +32,6 @@ namespace ClinicSchedule.Web
             string connectionString = Configuration.GetConnectionString("DefaultConnection"); 
             services.AddAppDbContext(connectionString);
 
-            services.AddScoped<ISearchAppointmentsService, SearchAppointmentsService>();
-            services.AddScoped<ISearchEventsService, SearchEventsService>();
-            services.AddScoped<ILinkAppointmentsService, LinkAppointmentsService>();
-
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             

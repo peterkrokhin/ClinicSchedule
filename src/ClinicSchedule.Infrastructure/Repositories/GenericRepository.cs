@@ -27,6 +27,5 @@ namespace ClinicSchedule.Infrastructure
         {
             DbSet.Update(entity);
         }
-        
     }
 }
