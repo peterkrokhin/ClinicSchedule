@@ -36,6 +36,8 @@ namespace ClinicSchedule.Web
             services.AddScoped<ISearchEventsService, SearchEventsService>();
             services.AddScoped<ILinkAppointmentsService, LinkAppointmentsService>();
 
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             
         }
 

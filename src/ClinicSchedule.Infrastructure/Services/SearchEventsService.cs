@@ -47,11 +47,11 @@ namespace ClinicSchedule.Infrastructure
                 .FirstOrDefault();
 
             // Проекция в DTO
-            AvailableDateEvents availableDateEvents = new AvailableDateEvents()
-            {
-                AvailableDate = group?.Key,
-                AvailableEventsList = group?.ToList(),         
-            };
+            AvailableDateEvents availableDateEvents = new AvailableDateEvents();
+//            {
+//                AvailableDate = group?.Key,
+//                AvailableEventsList = group?.ToList(),         
+//            };
 
             return availableDateEvents;
 

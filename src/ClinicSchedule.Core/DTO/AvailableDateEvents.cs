@@ -6,6 +6,6 @@ namespace ClinicSchedule.Core
     public class AvailableDateEvents
     {
         public DateTime? AvailableDate { get; set; }
-        public IEnumerable<Event> AvailableEventsList { get; set; } 
+        public IEnumerable<EventDTO> AvailableEventsList { get; set; } 
     }
 }
