@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClinicSchedule.Infrastructu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClinicSchedule.Web", "src\ClinicSchedule.Web\ClinicSchedule.Web.csproj", "{C0108EEF-1683-47B7-B9F6-13915DC23DB9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClinicSchedule.Application", "src\ClinicSchedule.Application\ClinicSchedule.Application.csproj", "{03D66B5E-3063-4A14-8ABE-D60C08830746}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,10 +62,23 @@ Global
 		{C0108EEF-1683-47B7-B9F6-13915DC23DB9}.Release|x64.Build.0 = Release|Any CPU
 		{C0108EEF-1683-47B7-B9F6-13915DC23DB9}.Release|x86.ActiveCfg = Release|Any CPU
 		{C0108EEF-1683-47B7-B9F6-13915DC23DB9}.Release|x86.Build.0 = Release|Any CPU
+		{03D66B5E-3063-4A14-8ABE-D60C08830746}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03D66B5E-3063-4A14-8ABE-D60C08830746}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03D66B5E-3063-4A14-8ABE-D60C08830746}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{03D66B5E-3063-4A14-8ABE-D60C08830746}.Debug|x64.Build.0 = Debug|Any CPU
+		{03D66B5E-3063-4A14-8ABE-D60C08830746}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{03D66B5E-3063-4A14-8ABE-D60C08830746}.Debug|x86.Build.0 = Debug|Any CPU
+		{03D66B5E-3063-4A14-8ABE-D60C08830746}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03D66B5E-3063-4A14-8ABE-D60C08830746}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03D66B5E-3063-4A14-8ABE-D60C08830746}.Release|x64.ActiveCfg = Release|Any CPU
+		{03D66B5E-3063-4A14-8ABE-D60C08830746}.Release|x64.Build.0 = Release|Any CPU
+		{03D66B5E-3063-4A14-8ABE-D60C08830746}.Release|x86.ActiveCfg = Release|Any CPU
+		{03D66B5E-3063-4A14-8ABE-D60C08830746}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D65965DF-BE39-4ACA-80F9-FA4176547422} = {729D7EBE-3FD8-45F0-9FF1-628DC2300E23}
 		{0C745A01-31FE-41E8-A56C-16608C4CA1BA} = {729D7EBE-3FD8-45F0-9FF1-628DC2300E23}
 		{C0108EEF-1683-47B7-B9F6-13915DC23DB9} = {729D7EBE-3FD8-45F0-9FF1-628DC2300E23}
+		{03D66B5E-3063-4A14-8ABE-D60C08830746} = {729D7EBE-3FD8-45F0-9FF1-628DC2300E23}
 	EndGlobalSection
 EndGlobal

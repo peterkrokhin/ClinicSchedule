@@ -1,11 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\ClinicSchedule.Core\ClinicSchedule.Core.csproj" />
+    <PackageReference Include="Microsoft.EntityFrameWorkCore.Sqlite" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameWorkCore.Sqlite" Version="5.0.0" />
+    <ProjectReference Include="..\ClinicSchedule.Application\ClinicSchedule.Application.csproj" />
+    <ProjectReference Include="..\ClinicSchedule.Core\ClinicSchedule.Core.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

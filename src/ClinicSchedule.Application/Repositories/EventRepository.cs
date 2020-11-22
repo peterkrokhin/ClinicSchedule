@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-namespace ClinicSchedule.Infrastructure
+namespace ClinicSchedule.Application
 {
     public class EventRepository : GenericRepository<Event>, IEventRepository
     {
-        public EventRepository(AppDbContext appDbContext) : base(appDbContext)
+        public EventRepository(IAppDbContext appDbContext) : base(appDbContext)
         {
         }
 

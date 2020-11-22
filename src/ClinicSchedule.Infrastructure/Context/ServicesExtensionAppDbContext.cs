@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using ClinicSchedule.Application;
 
 namespace ClinicSchedule.Infrastructure
 {
@@ -7,7 +8,7 @@ namespace ClinicSchedule.Infrastructure
     {
         public static void AddAppDbContext(this IServiceCollection services, string connectionString)
         {
-            services.AddDbContext<AppDbContext>(options => options.UseSqlite(connectionString));
+            services.AddDbContext<IAppDbContext, AppDbContext>(options => options.UseSqlite(connectionString));
         }
     }
 }

@@ -5,11 +5,11 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace ClinicSchedule.Infrastructure
+namespace ClinicSchedule.Application
 {
     public class AppointmentRepository: GenericRepository<Appointment>, IAppointmentRepository
     {
-        public AppointmentRepository(AppDbContext appDbContext) : base(appDbContext)
+        public AppointmentRepository(IAppDbContext appDbContext) : base(appDbContext)
         {
         }
 

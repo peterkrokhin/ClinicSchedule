@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-namespace ClinicSchedule.Infrastructure
+namespace ClinicSchedule.Application
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private AppDbContext DbContext { get; set; }
+        private IAppDbContext DbContext { get; set; }
         public IAppointmentRepository Appointments { get; set; }
         public IEventRepository Events{ get; set; }
 
-        public UnitOfWork(AppDbContext appDbContext)
+        public UnitOfWork(IAppDbContext appDbContext)
         {
             DbContext = appDbContext;
             Appointments = new AppointmentRepository(DbContext);

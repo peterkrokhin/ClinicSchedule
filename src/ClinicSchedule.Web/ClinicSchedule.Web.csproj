@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
+    <ProjectReference Include="..\ClinicSchedule.Application\ClinicSchedule.Application.csproj" />
     <ProjectReference Include="..\ClinicSchedule.Infrastructure\ClinicSchedule.Infrastructure.csproj" />
   </ItemGroup>
 

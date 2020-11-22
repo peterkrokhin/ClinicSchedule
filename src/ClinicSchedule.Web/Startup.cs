@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using ClinicSchedule.Core;
+using ClinicSchedule.Application;
 using ClinicSchedule.Infrastructure;
 using Microsoft.Extensions.Configuration;
 

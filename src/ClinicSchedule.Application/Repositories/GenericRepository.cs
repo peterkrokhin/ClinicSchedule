@@ -5,14 +5,14 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace ClinicSchedule.Infrastructure
+namespace ClinicSchedule.Application
 {
     abstract public class GenericRepository<T> : IGenericRepository<T> where T:class
     {
-        public AppDbContext DbContext { get; set; }
-        public DbSet<T> DbSet { get; set; }
+        public IAppDbContext DbContext { get; set; }
+        protected DbSet<T> DbSet { get; set; }
 
-        public GenericRepository(AppDbContext appDbContext)
+        public GenericRepository(IAppDbContext appDbContext)
         {
             DbContext = appDbContext;
             DbSet = appDbContext.Set<T>();

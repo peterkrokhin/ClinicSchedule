@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-using ClinicSchedule.Infrastructure;
 using ClinicSchedule.Core;
 
 namespace ClinicSchedule.Web
