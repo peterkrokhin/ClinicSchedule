@@ -9,7 +9,7 @@ namespace ClinicSchedule.Core
         IAppointmentRepository Appointments { get; set; }
         IEventRepository Events { get; set; }
         Task<AvailableDateEvents> GetAvailableDateEventsForAllPatientAppointmentsAsync(int patientId);
-        Task<string> LinkAppointmentToEventAsync(int appointmentId, int eventId);
+        Task TryLinkAppointmentToEventAsync(int appointmentId, int eventId);
         Task SaveChangesAsync();
     }
 }

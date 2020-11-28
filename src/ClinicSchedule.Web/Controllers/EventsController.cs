@@ -6,49 +6,56 @@ using System.Threading.Tasks;
 
 using ClinicSchedule.Infrastructure;
 using ClinicSchedule.Core;
+using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace ClinicSchedule.Web
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/")]
     public class EventsController : Controller
     {
-        public IUnitOfWork UnitOfWork { get; set; }
+        private IUnitOfWork UnitOfWork { get; set; }
+        private ILogger Logger { get; set; }
 
-        public EventsController(IUnitOfWork unitOfWork)
+        public EventsController(IUnitOfWork unitOfWork, ILogger<EventsController> logger)
         {
             UnitOfWork = unitOfWork;
+            Logger = logger;
         }
 
-        // GET api/Events/GetAvailableDateEventsForAllPatientAppointments{patientId}
-        [Route("[action]/{patientId:int}")]
+        // GET api/patients/{id}/nearestavailabledate
+        [Route("patients/{patientId:int}/nearestavailabledate")]
         public async Task<IActionResult> GetAvailableDateEventsForAllPatientAppointments(int patientId)
         {
+            Logger.LogInformation($"{DateTime.Now:o}, Request: {HttpContext.Request.Path}");
+
+            var nearestAvailableDateEvents = await UnitOfWork.GetAvailableDateEventsForAllPatientAppointmentsAsync(patientId);
+
+            Logger.LogInformation($"{DateTime.Now:o}, Data for response: {JsonSerializer.Serialize(nearestAvailableDateEvents)}");
+            Logger.LogInformation($"{DateTime.Now:o}, Response status code: 200");
+
+            return Ok(nearestAvailableDateEvents);
+        }
+
+        // GET api/apievents/{id}/{id}
+        [Route("events/{eventId:int}/{appointmentId:int}")]
+        public async Task<IActionResult> TryLinkAppointmentToEvent(int eventId, int appointmentId)
+        {
+            Logger.LogInformation($"{DateTime.Now:o}, Request: {HttpContext.Request.Path}");
+            
             try
             {
-                var availableDateEventsResult = await UnitOfWork.GetAvailableDateEventsForAllPatientAppointmentsAsync(patientId);
-                return Ok(availableDateEventsResult);
+                await UnitOfWork.TryLinkAppointmentToEventAsync(appointmentId, eventId);
+                Logger.LogInformation($"{DateTime.Now:o}, Message: done, Response status code: 200");
+                return Ok("done");
             }
-            catch
+            catch (Exception e)
             {
-                return BadRequest();
+                Logger.LogInformation($"{DateTime.Now:o}, Message: {e.Message}, Response status code: 404");
+                return NotFound(e.Message);
             }
+            
         }
-
-        // GET api/Events/LinkAppointmentToEvent/{patientId}
-        [Route("[action]/{patientId:int}/{eventId:int}")]
-        public async Task<IActionResult> LinkAppointmentToEvent(int patientId, int eventId)
-        {
-            string linkResult = await UnitOfWork.LinkAppointmentToEventAsync(patientId, eventId);
-            return Ok(linkResult); 
-        }
-
-
-        protected override void Dispose(bool disposing)
-        {
-            UnitOfWork.Dispose();
-            base.Dispose(disposing);
-        }
-
     }
 }

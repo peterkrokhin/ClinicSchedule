@@ -5,51 +5,52 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 using ClinicSchedule.Core;
+using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace ClinicSchedule.Web
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/")]
     public class AppointmentsController : Controller
     {
-        public IUnitOfWork UnitOfWork { get; set; }
+        private IUnitOfWork UnitOfWork { get; set; }
+        private ILogger Logger { get; set; }
 
-        public AppointmentsController(IUnitOfWork unitOfWork)
+        public AppointmentsController(IUnitOfWork unitOfWork, ILogger<AppointmentsController> logger)
         {
             UnitOfWork = unitOfWork;
+            Logger = logger;
         }
 
-        // GET api/Appointments/GetNotLinkedAppointmentsByPatientName/{patientName}
-        [Route("[action]/{patientName:length(1, 100)}")]
-        public async Task<IActionResult> GetNotLinkedAppointmentsByPatientName(string patientName)
+        // GET api/patients/name={name}/notlinkedappointments
+        [Route("patients/name={patientName:length(1, 100)}/notlinkedappointments")]
+        public async Task<IActionResult> Get(string patientName)
         {
-            var appointments = await UnitOfWork.Appointments.GetNotLinkedAppointmentsByPatientNameAsync(patientName);
+            Logger.LogInformation($"{DateTime.Now:o}, Request: {HttpContext.Request.Path}");
 
-            if (appointments.Count() == 0)
-            {
-                return NotFound();
-            }
-            var appointmentsResult = UnitOfWork.Appointments.ConvertAllToDTO(appointments);
-            return Ok(appointmentsResult);
+            var notLinkedAppointments = await UnitOfWork.Appointments.GetNotLinkedAppointmentsByPatientNameAsync(patientName);
+            var notLinkedappointmentsResult = UnitOfWork.Appointments.ConvertAllToDTO(notLinkedAppointments);
+
+            Logger.LogInformation($"{DateTime.Now:o}, Data for response: {JsonSerializer.Serialize(notLinkedAppointments)}");
+            Logger.LogInformation($"{DateTime.Now:o}, Response status code: 200");
+
+            return Ok(notLinkedAppointments);
         }
 
-        // GET api/Appointments/GetNotLinkedAppointmentsByPatientId/{patientId}
-        [Route("[action]/{patientId:int}")]
-        public async Task<IActionResult> GetNotLinkedAppointmentsByPatientId(int patientId)
+        // GET api/patients/{id}/notlinkedappointments
+        [Route("patients/{patientId:int}/notlinkedappointments")]
+        public async Task<IActionResult> Get(int patientId)
         {
-            var appointments = await UnitOfWork.Appointments.GetNotLinkedAppointmentsByPatientIdAsync(patientId);
-            if (appointments.Count() == 0)
-            {
-                return NotFound();
-            }
-            var appointmentsResult = UnitOfWork.Appointments.ConvertAllToDTO(appointments);
-            return Ok(appointmentsResult);
-        }
+            Logger.LogInformation($"{DateTime.Now:o}, Request: {HttpContext.Request.Path}");
 
-        protected override void Dispose(bool disposing)
-        {
-            UnitOfWork.Dispose();
-            base.Dispose(disposing);
+            var notLinkedAppointments = await UnitOfWork.Appointments.GetNotLinkedAppointmentsByPatientIdAsync(patientId);
+            var notLinkedAppointmentsDTO = UnitOfWork.Appointments.ConvertAllToDTO(notLinkedAppointments);
+            
+            Logger.LogInformation($"{DateTime.Now:o}, Data for response: {JsonSerializer.Serialize(notLinkedAppointmentsDTO)}");
+            Logger.LogInformation($"{DateTime.Now:o}, Response status code: 200");
+            
+            return Ok(notLinkedAppointmentsDTO);
         }
     }
 }

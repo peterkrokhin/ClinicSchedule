@@ -23,6 +23,11 @@ namespace ClinicSchedule.Application
             return await DbSet.FindAsync(id);
         }
 
+        public async Task<IEnumerable<T>> GetAllAsync()
+        {
+            return await DbSet.ToListAsync();
+        }
+
         public void Update(T entity)
         {
             DbSet.Update(entity);

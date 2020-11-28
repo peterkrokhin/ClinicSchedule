@@ -25,9 +25,10 @@ namespace ClinicSchedule.Application
             // Все назначения пациента, не привязанные к расписанию, из БД
             var appointments = await Appointments.GetNotLinkedAppointmentsByPatientIdAsync(patientId);
 
+            // Назначения не найдены
             if (appointments.Count() == 0)
-                throw new Exception($"appointmetns by id={patientId} not found");
-
+                return AvailableDateEvents.CreateEmpty();
+          
             // Все незанятые ячейки из БД
             var events = await Events.GetAllNotLinkedEventsAsync();
 
@@ -48,41 +49,40 @@ namespace ClinicSchedule.Application
             return new AvailableDateEvents()
             {
                 AvailableDate = group?.Key,
-                AvailableEventsList = group != null ? Events.ConvertAllToDTO(group.ToList()) : null,        
+                AvailableEventsList = Events?.ConvertAllToDTO(group.ToList()) ?? new List<EventDTO>(),
             };
+  
         }
 
-        public async Task<string> LinkAppointmentToEventAsync(int appointmentId, int eventId)
+        public async Task TryLinkAppointmentToEventAsync(int appointmentId, int eventId)
         {
             // Запрашиваем из БД назначение по id
             var appointment = await Appointments.GetByIdIncludeEventsAsync(appointmentId);
 
             // Назначение не найдено
             if (appointment == null)
-                return $"no Appointment by id={appointmentId}";
+                throw new Exception($"no Appointment by id={appointmentId}");
 
             // Назначение уже привязано
             if (appointment.Events.Count != 0)
-                return $"Appointment id={appointmentId} is already linked";
+                throw new Exception($"Appointment id={appointmentId} is already linked");
 
             // Запрашиваем из БД ячейку по id
             var evnt = await Events.GetByIdAsync(eventId);
 
             // Ячейка не найдена
             if (evnt == null)
-                return $"no Event by id={eventId}";
+                throw new Exception($"no Event by id={eventId}");
 
             // Дополнительно проверяем, чтобы услуга в Appointment и услуга в Event совпали
             if (appointment.ServiceId != evnt.ServiceId)
-                return $"service in Appointment id={appointmentId} and service in Event id={eventId} dont match";
+                throw new Exception($"service in Appointment id={appointmentId} and service in Event id={eventId} dont match");
 
             // Все Ок, апдейтим ячейку
             evnt.AppointmentId = appointmentId;
 
             Events.Update(evnt);
             await SaveChangesAsync();
-
-            return "done";
         }
 
         public async Task SaveChangesAsync()
@@ -99,6 +99,7 @@ namespace ClinicSchedule.Application
                 if(disposing)
                 {
                     DbContext.Dispose();
+                    // Console.WriteLine($"object {this.ToString()} Dispose"); // Проверка работы Dispose()
                 }
             }
             disposed = true;
