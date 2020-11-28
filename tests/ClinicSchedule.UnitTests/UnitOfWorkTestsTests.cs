@@ -27,22 +27,22 @@ namespace ClinicSchedule.UnitTests
         // Тест метода GetAvailableDateEventsForAllPatientAppointmentsAsync
         [TestCaseSource(typeof(UnitOfWorkTestsData), 
             nameof(UnitOfWorkTestsData.GetAvailableDateEventsForAllPatientAppointmentsAsyncTestData))]
-        public async Task GetAvailableDateEventsForAllPatientAppointmentsAsyncTest(int patientId, AvailableDateEvents expectedAvailableDate)
+        public async Task GetAvailableDateEventsForAllPatientAppointmentsAsyncTest(int patientId, DateEvents expectedAvailableDate)
         {
             using (IUnitOfWork unitOfWork = new UnitOfWork(new TestDbContext()))
             {
-                AvailableDateEvents availableDate = 
+                DateEvents availableDate = 
                     await unitOfWork.GetAvailableDateEventsForAllPatientAppointmentsAsync(patientId);
 
-                bool result = availableDate.AvailableDate == expectedAvailableDate.AvailableDate &
-                    availableDate.AvailableEventsList.Select(e => e.Id)
-                        .SequenceEqual(expectedAvailableDate.AvailableEventsList.Select(e => e.Id)) &
-                    availableDate.AvailableEventsList.Select(e => e.DateTime)
-                        .SequenceEqual(expectedAvailableDate.AvailableEventsList.Select(e => e.DateTime)) &
-                    availableDate.AvailableEventsList.Select(e => e.ServiceId)
-                        .SequenceEqual(expectedAvailableDate.AvailableEventsList.Select(e => e.ServiceId)) &
-                    availableDate.AvailableEventsList.Select(e => e.AppointmentId)
-                        .SequenceEqual(expectedAvailableDate.AvailableEventsList.Select(e => e.AppointmentId));
+                bool result = availableDate.Date == expectedAvailableDate.Date &
+                    availableDate.EventList.Select(e => e.Id)
+                        .SequenceEqual(expectedAvailableDate.EventList.Select(e => e.Id)) &
+                    availableDate.EventList.Select(e => e.DateTime)
+                        .SequenceEqual(expectedAvailableDate.EventList.Select(e => e.DateTime)) &
+                    availableDate.EventList.Select(e => e.ServiceId)
+                        .SequenceEqual(expectedAvailableDate.EventList.Select(e => e.ServiceId)) &
+                    availableDate.EventList.Select(e => e.AppointmentId)
+                        .SequenceEqual(expectedAvailableDate.EventList.Select(e => e.AppointmentId));
 
                 Assert.That(result == true);
             }
@@ -111,27 +111,27 @@ namespace ClinicSchedule.UnitTests
     {
         public static object[] GetAvailableDateEventsForAllPatientAppointmentsAsyncTestData =
         {
-            new object[] {1, new AvailableDateEvents(){  
-                    AvailableDate = new DateTime(2020, 1, 1),
-                    AvailableEventsList = new List<EventDTO>(){
+            new object[] {1, new DateEvents(){  
+                    Date = new DateTime(2020, 1, 1),
+                    EventList = new List<EventDTO>(){
                         new EventDTO(){Id=1, DateTime=new DateTime(2020, 1, 1, 12, 0, 0), ServiceId=1, AppointmentId=null},
                         new EventDTO(){Id=2, DateTime=new DateTime(2020, 1, 1, 13, 0, 0), ServiceId=2, AppointmentId=null},
                         new EventDTO(){Id=3, DateTime=new DateTime(2020, 1, 1, 14, 0, 0), ServiceId=3, AppointmentId=null},
                     }
                 },
             },
-            new object[] {2, new AvailableDateEvents(){  
-                    AvailableDate = new DateTime(2020, 1, 4),
-                    AvailableEventsList = new List<EventDTO>(){
+            new object[] {2, new DateEvents(){  
+                    Date = new DateTime(2020, 1, 4),
+                    EventList = new List<EventDTO>(){
                         new EventDTO(){Id=9,  DateTime=new DateTime(2020, 1, 4, 12, 0, 0), ServiceId=4, AppointmentId=null}, 
                         new EventDTO(){Id=10, DateTime=new DateTime(2020, 1, 4, 13, 0, 0), ServiceId=3, AppointmentId=null},
                         new EventDTO(){Id=11, DateTime=new DateTime(2020, 1, 4, 12, 0, 0), ServiceId=2, AppointmentId=null}, 
                     },
                 },    
             },
-            new object[] {6, new AvailableDateEvents(){  
-                    AvailableDate = new DateTime(2020, 1, 6),
-                    AvailableEventsList = new List<EventDTO>(){
+            new object[] {6, new DateEvents(){  
+                    Date = new DateTime(2020, 1, 6),
+                    EventList = new List<EventDTO>(){
                         new EventDTO(){Id=14, DateTime=new DateTime(2020, 1, 6, 12, 0, 0), ServiceId=4, AppointmentId=null}, 
                         new EventDTO(){Id=15, DateTime=new DateTime(2020, 1, 6, 13, 0, 0), ServiceId=1, AppointmentId=null}, 
                         new EventDTO(){Id=16, DateTime=new DateTime(2020, 1, 6, 14, 0, 0), ServiceId=1, AppointmentId=null}, 
@@ -140,14 +140,14 @@ namespace ClinicSchedule.UnitTests
                     },
                 },    
             },
-            new object[] {1000, new AvailableDateEvents(){              // Назначение Id=1000 не найдено
-                    AvailableDate = null,
-                    AvailableEventsList = new List<EventDTO>(){},
+            new object[] {1000, new DateEvents(){              // Назначение Id=1000 не найдено
+                    Date = null,
+                    EventList = new List<EventDTO>(){},
                 },
             },
-            new object[] {-1, new AvailableDateEvents(){                // Назначение Id=-1 не найдено
-                    AvailableDate = null,
-                    AvailableEventsList = new List<EventDTO>(){},
+            new object[] {-1, new DateEvents(){                // Назначение Id=-1 не найдено
+                    Date = null,
+                    EventList = new List<EventDTO>(){},
                 },
             },
         };

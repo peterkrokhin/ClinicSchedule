@@ -20,14 +20,14 @@ namespace ClinicSchedule.Application
             Events = new EventRepository(DbContext);
         }
 
-        public async Task<AvailableDateEvents> GetAvailableDateEventsForAllPatientAppointmentsAsync(int patientId)
+        public async Task<DateEvents> GetAvailableDateEventsForAllPatientAppointmentsAsync(int patientId)
         {
             // Все назначения пациента, не привязанные к расписанию, из БД
             var appointments = await Appointments.GetNotLinkedAppointmentsByPatientIdAsync(patientId);
 
             // Назначения не найдены
             if (appointments.Count() == 0)
-                return AvailableDateEvents.CreateEmpty();
+                return DateEvents.CreateEmpty();
           
             // Все незанятые ячейки из БД
             var events = await Events.GetAllNotLinkedEventsAsync();
@@ -46,10 +46,10 @@ namespace ClinicSchedule.Application
                 .FirstOrDefault();
 
             // Проекция в DTO
-            return new AvailableDateEvents()
+            return new DateEvents()
             {
-                AvailableDate = group?.Key,
-                AvailableEventsList = Events?.ConvertAllToDTO(group.ToList()) ?? new List<EventDTO>(),
+                Date = group?.Key,
+                EventList = Events?.ConvertAllToDTO(group.ToList()) ?? new List<EventDTO>(),
             };
   
         }
