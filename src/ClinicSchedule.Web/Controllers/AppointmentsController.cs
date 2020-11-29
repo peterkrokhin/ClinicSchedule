@@ -24,22 +24,22 @@ namespace ClinicSchedule.Web
         }
 
         // GET api/patients/name={name}/notlinkedappointments
-        [Route("patients/name={patientName:length(1, 100)}/notlinkedappointments")]
+        [HttpGet("patients/name={patientName:length(1, 100)}/notlinkedappointments")]
         public async Task<IActionResult> Get(string patientName)
         {
             Logger.LogInformation($"{DateTime.Now:o}, Request: {HttpContext.Request.Path}");
 
             var notLinkedAppointments = await UnitOfWork.Appointments.GetNotLinkedAppointmentsByPatientNameAsync(patientName);
-            var notLinkedappointmentsResult = UnitOfWork.Appointments.ConvertAllToDTO(notLinkedAppointments);
+            var notLinkedAppointmentsDTO = UnitOfWork.Appointments.ConvertAllToDTO(notLinkedAppointments);
 
-            Logger.LogInformation($"{DateTime.Now:o}, Data for response: {JsonSerializer.Serialize(notLinkedAppointments)}");
+            Logger.LogInformation($"{DateTime.Now:o}, Data for response: {JsonSerializer.Serialize(notLinkedAppointmentsDTO)}");
             Logger.LogInformation($"{DateTime.Now:o}, Response status code: 200");
 
-            return Ok(notLinkedAppointments);
+            return Ok(notLinkedAppointmentsDTO);
         }
 
         // GET api/patients/{id}/notlinkedappointments
-        [Route("patients/{patientId:int}/notlinkedappointments")]
+        [HttpGet("patients/{patientId:int}/notlinkedappointments")]
         public async Task<IActionResult> Get(int patientId)
         {
             Logger.LogInformation($"{DateTime.Now:o}, Request: {HttpContext.Request.Path}");
