@@ -25,8 +25,8 @@ namespace ClinicSchedule.Web
         }
 
         // GET api/patients/{id}/nearestavailabledate
-        [Route("patients/{patientId:int}/nearestavailabledate")]
-        public async Task<IActionResult> GetAvailableDateEventsForAllPatientAppointments(int patientId)
+        [HttpGet("patients/{patientId:int}/nearestavailabledate")]
+        public async Task<IActionResult> Get(int patientId)
         {
             Logger.LogInformation($"{DateTime.Now:o}, Request: {HttpContext.Request.Path}");
 
@@ -38,24 +38,28 @@ namespace ClinicSchedule.Web
             return Ok(nearestAvailableDateEvents);
         }
 
-        // GET api/apievents/{id}/{id}
-        [Route("events/{eventId:int}/{appointmentId:int}")]
-        public async Task<IActionResult> TryLinkAppointmentToEvent(int eventId, int appointmentId)
+        // PATCH api/api/events/{id}, FromBody: appointmentId={id}
+        [HttpPatch("events/{eventId:int}")]
+        public async Task<IActionResult> Patch(int eventId, [FromBody] JsonDocument jsonDocument)
         {
             Logger.LogInformation($"{DateTime.Now:o}, Request: {HttpContext.Request.Path}");
-            
+                  
             try
             {
+                int appointmentId = jsonDocument.RootElement.GetProperty("appointmentId").GetInt32();
+                Logger.LogInformation($"{DateTime.Now:o}, parameter accepted appointmentId={appointmentId}");
+
                 await UnitOfWork.TryLinkAppointmentToEventAsync(appointmentId, eventId);
-                Logger.LogInformation($"{DateTime.Now:o}, Message: done, Response status code: 200");
-                return Ok("done");
+                Logger.LogInformation($"{DateTime.Now:o}, patch successfully, response status code: 200");
+                
+                return Ok("patch successfully");
             }
             catch (Exception e)
             {
-                Logger.LogInformation($"{DateTime.Now:o}, Message: {e.Message}, Response status code: 404");
-                return NotFound(e.Message);
+                Logger.LogInformation($"{DateTime.Now:o}, patch failure: {e.Message}, response status code: 404");
+                return NotFound($"patch failure: {e.Message}");
             }
-            
+  
         }
     }
 }
