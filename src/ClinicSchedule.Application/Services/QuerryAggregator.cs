@@ -81,7 +81,7 @@ namespace ClinicSchedule.Application
 
         public virtual void Dispose(bool disposing)
         {
-            if(!disposed)
+            if(disposed)
                 return;
 
             if(disposing)
