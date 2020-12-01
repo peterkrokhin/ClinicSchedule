@@ -4,8 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-using ClinicSchedule.Infrastructure;
-using ClinicSchedule.Core;
+using ClinicSchedule.Application;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
@@ -15,12 +14,12 @@ namespace ClinicSchedule.Web
     [Route("api/")]
     public class EventsController : Controller
     {
-        private IUnitOfWork UnitOfWork { get; set; }
+        private IQuerryAggregator QuerryAggregator { get; set; }
         private ILogger Logger { get; set; }
 
-        public EventsController(IUnitOfWork unitOfWork, ILogger<EventsController> logger)
+        public EventsController(IQuerryAggregator querryAggregator, ILogger<EventsController> logger)
         {
-            UnitOfWork = unitOfWork;
+            QuerryAggregator = querryAggregator;
             Logger = logger;
         }
 
@@ -30,7 +29,7 @@ namespace ClinicSchedule.Web
         {
             Logger.LogInformation($"{DateTime.Now:o}, Request: {HttpContext.Request.Path}");
 
-            var nearestAvailableDateEvents = await UnitOfWork.GetAvailableDateEventsForAllPatientAppointmentsAsync(patientId);
+            var nearestAvailableDateEvents = await QuerryAggregator.GetAvailableDateEventsForAllPatientAppointmentsAsync(patientId);
 
             Logger.LogInformation($"{DateTime.Now:o}, Data for response: {JsonSerializer.Serialize(nearestAvailableDateEvents)}");
             Logger.LogInformation($"{DateTime.Now:o}, Response status code: 200");
@@ -49,7 +48,7 @@ namespace ClinicSchedule.Web
                 int appointmentId = jsonDocument.RootElement.GetProperty("appointmentId").GetInt32();
                 Logger.LogInformation($"{DateTime.Now:o}, parameter accepted appointmentId={appointmentId}");
 
-                await UnitOfWork.TryLinkAppointmentToEventAsync(appointmentId, eventId);
+                await QuerryAggregator.TryLinkAppointmentToEventAsync(appointmentId, eventId);
                 Logger.LogInformation($"{DateTime.Now:o}, patch successfully, response status code: 200");
                 
                 return Ok("patch successfully");

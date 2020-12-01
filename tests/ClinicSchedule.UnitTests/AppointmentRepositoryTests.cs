@@ -6,6 +6,7 @@ using System.Linq;
 
 using ClinicSchedule.Core;
 using ClinicSchedule.Application;
+using ClinicSchedule.Infrastructure;
 
 namespace ClinicSchedule.UnitTests
 {

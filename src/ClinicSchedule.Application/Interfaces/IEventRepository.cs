@@ -1,7 +1,8 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using ClinicSchedule.Core;
 
-namespace ClinicSchedule.Core
+namespace ClinicSchedule.Application
 {
     public interface IEventRepository : IGenericRepository<Event>
     {

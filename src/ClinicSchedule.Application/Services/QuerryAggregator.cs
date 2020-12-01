@@ -1,36 +1,29 @@
 using System;
-using ClinicSchedule.Core;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace ClinicSchedule.Application
 {
-    public class UnitOfWork : IUnitOfWork
+    public class QuerryAggregator : IQuerryAggregator
     {
-        private IAppDbContext DbContext { get; set; }
-        public IAppointmentRepository Appointments { get; set; }
-        public IEventRepository Events{ get; set; }
-
-        public UnitOfWork(IAppDbContext appDbContext)
+        private IUnitOfWork UnitOfWork { get; set; }
+        public QuerryAggregator(IUnitOfWork unitOfWork)
         {
-            DbContext = appDbContext;
-            Appointments = new AppointmentRepository(DbContext);
-            Events = new EventRepository(DbContext);
+            UnitOfWork = unitOfWork;
         }
 
         public async Task<DateEvents> GetAvailableDateEventsForAllPatientAppointmentsAsync(int patientId)
         {
             // Все назначения пациента, не привязанные к расписанию, из БД
-            var appointments = await Appointments.GetNotLinkedAppointmentsByPatientIdAsync(patientId);
+            var appointments = await UnitOfWork.Appointments.GetNotLinkedAppointmentsByPatientIdAsync(patientId);
 
             // Назначения не найдены
             if (appointments.Count() == 0)
                 return DateEvents.CreateEmpty();
           
             // Все незанятые ячейки из БД
-            var events = await Events.GetAllNotLinkedEventsAsync();
+            var events = await UnitOfWork.Events.GetAllNotLinkedEventsAsync();
 
             // Группируем ячейки по группам, в качестве ключа группировки - дата без времени
             // Отбираем группы, в ячейках которых имеются все услуги из всех назначений пациента
@@ -49,15 +42,14 @@ namespace ClinicSchedule.Application
             return new DateEvents()
             {
                 Date = group?.Key,
-                EventList = Events?.ConvertAllToDTO(group.ToList()) ?? new List<EventDTO>(),
+                EventList = UnitOfWork.Events?.ConvertAllToDTO(group.ToList()) ?? new List<EventDTO>(),
             };
-  
         }
 
         public async Task TryLinkAppointmentToEventAsync(int appointmentId, int eventId)
         {
             // Запрашиваем из БД назначение по id
-            var appointment = await Appointments.GetByIdIncludeEventsAsync(appointmentId);
+            var appointment = await UnitOfWork.Appointments.GetByIdIncludeEventsAsync(appointmentId);
 
             // Назначение не найдено
             if (appointment == null)
@@ -68,7 +60,7 @@ namespace ClinicSchedule.Application
                 throw new Exception($"Appointment id={appointmentId} is already linked");
 
             // Запрашиваем из БД ячейку по id
-            var evnt = await Events.GetByIdAsync(eventId);
+            var evnt = await UnitOfWork.Events.GetByIdAsync(eventId);
 
             // Ячейка не найдена
             if (evnt == null)
@@ -81,13 +73,8 @@ namespace ClinicSchedule.Application
             // Все Ок, апдейтим ячейку
             evnt.AppointmentId = appointmentId;
 
-            Events.Update(evnt);
-            await SaveChangesAsync();
-        }
-
-        public async Task SaveChangesAsync()
-        {
-            await DbContext.SaveChangesAsync();
+            UnitOfWork.Events.Update(evnt);
+            await UnitOfWork.SaveChangesAsync();
         }
 
         private bool disposed = false;
@@ -95,13 +82,14 @@ namespace ClinicSchedule.Application
         public virtual void Dispose(bool disposing)
         {
             if(!disposed)
+                return;
+
+            if(disposing)
             {
-                if(disposing)
-                {
-                    DbContext.Dispose();
-                    // Console.WriteLine($"object {this.ToString()} Dispose"); // Проверка работы Dispose()
-                }
+                UnitOfWork?.Dispose();
+                // Console.WriteLine($"object {this.ToString()} Dispose"); // Проверка работы Dispose()
             }
+            
             disposed = true;
         }
  
@@ -110,7 +98,5 @@ namespace ClinicSchedule.Application
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
     }
 }
-

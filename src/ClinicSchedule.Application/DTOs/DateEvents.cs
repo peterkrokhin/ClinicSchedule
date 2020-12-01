@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClinicSchedule.Core
+namespace ClinicSchedule.Application
 {
     public class DateEvents
     {

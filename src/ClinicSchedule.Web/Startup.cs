@@ -31,9 +31,9 @@ namespace ClinicSchedule.Web
             services.AddControllers();
 
             string connectionString = Configuration.GetConnectionString("DefaultConnection"); 
-            services.AddAppDbContext(connectionString);
+            services.AddAppInfrastructure(connectionString);
 
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IQuerryAggregator, QuerryAggregator>();
 
             
         }

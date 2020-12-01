@@ -4,8 +4,9 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System;
+using ClinicSchedule.Application;
 
-namespace ClinicSchedule.Application
+namespace ClinicSchedule.Infrastructure
 {
     abstract public class GenericRepository<T> : IGenericRepository<T> where T:class
     {
@@ -31,6 +32,28 @@ namespace ClinicSchedule.Application
         public void Update(T entity)
         {
             DbSet.Update(entity);
+        }
+
+        private bool disposed = false;
+
+        public virtual void Dispose(bool disposing)
+        {
+            if(disposed)
+                return;
+
+            if(disposing)
+            {
+                DbContext?.Dispose();
+                // Console.WriteLine($"object {this.ToString()} Dispose"); // Проверка работы Dispose()
+            }
+            
+            disposed = true;
+        }
+ 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

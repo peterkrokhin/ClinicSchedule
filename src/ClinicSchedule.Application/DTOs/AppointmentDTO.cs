@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ClinicSchedule.Core
+namespace ClinicSchedule.Application
 {
     public class AppointmentDTO
     {

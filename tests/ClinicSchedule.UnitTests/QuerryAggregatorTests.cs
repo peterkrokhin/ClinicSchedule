@@ -7,10 +7,11 @@ using System;
 
 using ClinicSchedule.Core;
 using ClinicSchedule.Application;
+using ClinicSchedule.Infrastructure;
 
 namespace ClinicSchedule.UnitTests
 {
-    public class UnitOfWorkTests
+    public class QuerryAggregatorTests
     {
         [SetUp]
         public void Setup()
@@ -29,23 +30,25 @@ namespace ClinicSchedule.UnitTests
             nameof(UnitOfWorkTestsData.GetAvailableDateEventsForAllPatientAppointmentsAsyncTestData))]
         public async Task GetAvailableDateEventsForAllPatientAppointmentsAsyncTest(int patientId, DateEvents expectedAvailableDate)
         {
-            using (IUnitOfWork unitOfWork = new UnitOfWork(new TestDbContext()))
-            {
-                DateEvents availableDate = 
-                    await unitOfWork.GetAvailableDateEventsForAllPatientAppointmentsAsync(patientId);
+            using TestDbContext testDbContext = new TestDbContext();
+            using IUnitOfWork unitOfWork = new UnitOfWork(testDbContext);
+            using QuerryAggregator querryAggregator = new QuerryAggregator(unitOfWork);
 
-                bool result = availableDate.Date == expectedAvailableDate.Date &
-                    availableDate.EventList.Select(e => e.Id)
-                        .SequenceEqual(expectedAvailableDate.EventList.Select(e => e.Id)) &
-                    availableDate.EventList.Select(e => e.DateTime)
-                        .SequenceEqual(expectedAvailableDate.EventList.Select(e => e.DateTime)) &
-                    availableDate.EventList.Select(e => e.ServiceId)
-                        .SequenceEqual(expectedAvailableDate.EventList.Select(e => e.ServiceId)) &
-                    availableDate.EventList.Select(e => e.AppointmentId)
-                        .SequenceEqual(expectedAvailableDate.EventList.Select(e => e.AppointmentId));
+            DateEvents availableDate = 
+                await querryAggregator.GetAvailableDateEventsForAllPatientAppointmentsAsync(patientId);
 
-                Assert.That(result == true);
-            }
+            bool result = availableDate.Date == expectedAvailableDate.Date &
+                availableDate.EventList.Select(e => e.Id)
+                    .SequenceEqual(expectedAvailableDate.EventList.Select(e => e.Id)) &
+                availableDate.EventList.Select(e => e.DateTime)
+                    .SequenceEqual(expectedAvailableDate.EventList.Select(e => e.DateTime)) &
+                availableDate.EventList.Select(e => e.ServiceId)
+                    .SequenceEqual(expectedAvailableDate.EventList.Select(e => e.ServiceId)) &
+                availableDate.EventList.Select(e => e.AppointmentId)
+                    .SequenceEqual(expectedAvailableDate.EventList.Select(e => e.AppointmentId));
+
+            Assert.That(result == true);
+            
         }
 
         // Тест метода TryLinkAppointmentToEventAsync. Исключения.
@@ -56,21 +59,22 @@ namespace ClinicSchedule.UnitTests
         [TestCase(7, 9)]        // Назначение уже привязано
         public async Task TryLinkAppointmentToEventAsyncTestExceptoins(int appointmentId, int eventId)
         {
-            using (IUnitOfWork unitOfWork = new UnitOfWork(new TestDbContext()))
+            using TestDbContext testDbContext = new TestDbContext();
+            using IUnitOfWork unitOfWork = new UnitOfWork(testDbContext);
+            using QuerryAggregator querryAggregator = new QuerryAggregator(unitOfWork);
+                    
+            // Привязка Appointment c Id=7 к Event с Id=9 для проверки [TestCase(7, 9)]
+            if (appointmentId == 7)
             {
-                // Привязка Appointment c Id=7 к Event с Id=9 для проверки [TestCase(7, 9)]
-                if (appointmentId == 7)
+                try
                 {
-                    try
-                    {
-                        await unitOfWork.TryLinkAppointmentToEventAsync(7, 9);
-                    }
-                    catch
-                    {
-                    }
+                    await querryAggregator.TryLinkAppointmentToEventAsync(7, 9);
                 }
-            
-                Assert.That(async () => await unitOfWork.TryLinkAppointmentToEventAsync(appointmentId, eventId), Throws.Exception);
+                catch
+                {
+                }
+                    
+                Assert.That(async () => await querryAggregator.TryLinkAppointmentToEventAsync(appointmentId, eventId), Throws.Exception);
             }
         }
 
@@ -81,27 +85,30 @@ namespace ClinicSchedule.UnitTests
         [TestCase(17, 3)]
         public async Task TryLinkAppointmentToEventAsyncTestNormal(int appointmentId, int eventId)
         {
-            using (IUnitOfWork unitOfWork = new UnitOfWork(new TestDbContext()))
-            {
-                await unitOfWork.TryLinkAppointmentToEventAsync(appointmentId, eventId);
+            using TestDbContext testDbContext = new TestDbContext();
+            using IUnitOfWork unitOfWork = new UnitOfWork(testDbContext);
+            using QuerryAggregator querryAggregator = new QuerryAggregator(unitOfWork);
 
-                Event linkedEvent = await unitOfWork.Events.GetByIdAsync(eventId);
-                Assert.That(linkedEvent.AppointmentId == appointmentId);
-            }
+            await querryAggregator.TryLinkAppointmentToEventAsync(appointmentId, eventId);
 
+            Event linkedEvent = await unitOfWork.Events.GetByIdAsync(eventId);
+            Assert.That(linkedEvent.AppointmentId == appointmentId);
+            
         }
 
         private async Task ResetAppointmentIdInEvents()
         {
-            using (IUnitOfWork unitOfWork = new UnitOfWork(new TestDbContext()))
+            using TestDbContext testDbContext = new TestDbContext();
+            using IUnitOfWork unitOfWork = new UnitOfWork(testDbContext);
+            using QuerryAggregator querryAggregator = new QuerryAggregator(unitOfWork);
+
+            var events = await unitOfWork.Events.GetAllAsync();
+            foreach (var e in events)
             {
-                var events = await unitOfWork.Events.GetAllAsync();
-                foreach (var e in events)
-                {
-                    e.AppointmentId = null;
-                }
-                await unitOfWork.SaveChangesAsync();
-                }
+                e.AppointmentId = null;
+            }
+            await unitOfWork.SaveChangesAsync();
+            
         }
         
     }

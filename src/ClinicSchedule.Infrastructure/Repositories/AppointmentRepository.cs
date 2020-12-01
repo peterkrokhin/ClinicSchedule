@@ -4,8 +4,9 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System;
+using ClinicSchedule.Application;
 
-namespace ClinicSchedule.Application
+namespace ClinicSchedule.Infrastructure
 {
     public class AppointmentRepository: GenericRepository<Appointment>, IAppointmentRepository
     {

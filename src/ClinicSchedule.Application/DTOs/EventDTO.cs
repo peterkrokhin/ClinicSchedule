@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ClinicSchedule.Core
+namespace ClinicSchedule.Application
 {
     public class EventDTO
     {

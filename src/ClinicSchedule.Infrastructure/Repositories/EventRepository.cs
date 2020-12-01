@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using ClinicSchedule.Application;
 
-namespace ClinicSchedule.Application
+namespace ClinicSchedule.Infrastructure
 {
     public class EventRepository : GenericRepository<Event>, IEventRepository
     {
