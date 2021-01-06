@@ -28,7 +28,9 @@ namespace ClinicSchedule.Web
         {
             services.AddControllers();
 
-            string connectionString = Configuration.GetConnectionString("DefaultConnection"); 
+            services.AddAppServices();
+
+            string connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddAppInfrastructure(connectionString);
 
             services.AddScoped<IQuerryAggregator, QuerryAggregator>();
