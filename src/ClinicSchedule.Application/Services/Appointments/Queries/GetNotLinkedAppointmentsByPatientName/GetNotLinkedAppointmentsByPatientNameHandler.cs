@@ -1,12 +1,16 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+
 using AutoMapper;
 using MediatR;
+
+using ClinicSchedule.Core;
 
 namespace ClinicSchedule.Application
 {
     public class GetNotLinkedAppointmentsByPatientNameHandler :
-        IRequestHandler<GetNotLinkedAppointmentsByPatientNameQuery, GetNotLinkedAppointmentsByPatientNameResponse>
+        IRequestHandler<GetNotLinkedAppointmentsByPatientNameQuery, IEnumerable<GetNotLinkedAppointmentsByPatientNameResponse>>
     {
         private readonly IAppointmentRepository _appointmentRepository;
         private readonly IMapper _mapper;
@@ -17,10 +21,11 @@ namespace ClinicSchedule.Application
             _mapper = mapper;
         }
 
-        public async Task<GetNotLinkedAppointmentsByPatientNameResponse> Handle(GetNotLinkedAppointmentsByPatientNameQuery query, CancellationToken cancellationToken)
+        public async Task<IEnumerable<GetNotLinkedAppointmentsByPatientNameResponse>> Handle(GetNotLinkedAppointmentsByPatientNameQuery query, 
+            CancellationToken cancellationToken)
         {
             var appointments = await _appointmentRepository.GetNotLinkedAppointmentsByPatientNameAsync(query.Name);
-            return _mapper.Map<GetNotLinkedAppointmentsByPatientNameResponse>(appointments);
+            return _mapper.Map<IEnumerable<Appointment>, IEnumerable<GetNotLinkedAppointmentsByPatientNameResponse>>(appointments);
         }
     }
 }

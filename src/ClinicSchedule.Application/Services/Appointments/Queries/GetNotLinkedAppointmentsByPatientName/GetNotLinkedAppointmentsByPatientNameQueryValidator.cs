@@ -7,7 +7,7 @@ namespace ClinicSchedule.Application
     {
         public GetNotLinkedAppointmentsByPatientNameQueryValidator()
         {
-            RuleFor(prop => prop.Name).NotNull().Length(2, 100);
+            RuleFor(patient => patient.Name).NotNull().Length(2, 100);
         }
     }
 }

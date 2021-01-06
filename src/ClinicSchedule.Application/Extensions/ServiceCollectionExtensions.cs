@@ -8,7 +8,7 @@ namespace ClinicSchedule.Application
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddApplicationServices(this IServiceCollection services)
+        public static void AddAppServices(this IServiceCollection services)
         {
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddAutoMapper(Assembly.GetExecutingAssembly());

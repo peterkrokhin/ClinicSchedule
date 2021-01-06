@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using MediatR;
 
 namespace ClinicSchedule.Application
 {
-    public class GetNotLinkedAppointmentsByPatientIdQuery : IRequest<GetNotLinkedAppointmentsByPatientIdResponse>
+    public class GetNotLinkedAppointmentsByPatientIdQuery 
+        : IRequest<IEnumerable<GetNotLinkedAppointmentsByPatientIdResponse>>
     {
         public int Id { get; set; }
 

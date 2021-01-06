@@ -8,6 +8,7 @@ namespace ClinicSchedule.Application
         public AppointmentProfile()
         {
             CreateMap<Appointment, GetNotLinkedAppointmentsByPatientIdResponse>();
+            CreateMap<Appointment, GetNotLinkedAppointmentsByPatientNameResponse>();
         }
     }
 }
