@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace ClinicSchedule.Application
 {
-    class GetNotLinkedAppointmentsByPatientNameQueryValidator : 
+    public class GetNotLinkedAppointmentsByPatientNameQueryValidator : 
         AbstractValidator<GetNotLinkedAppointmentsByPatientNameQuery>
     {
         public GetNotLinkedAppointmentsByPatientNameQueryValidator()

@@ -2,7 +2,7 @@ using MediatR;
 
 namespace ClinicSchedule.Application
 {
-    class GetNotLinkedAppointmentsByPatientIdQuery : IRequest<GetNotLinkedAppointmentsByPatientIdResponse>
+    public class GetNotLinkedAppointmentsByPatientIdQuery : IRequest<GetNotLinkedAppointmentsByPatientIdResponse>
     {
         public int Id { get; set; }
 

@@ -5,7 +5,7 @@ using MediatR;
 
 namespace ClinicSchedule.Application
 {
-    class GetNotLinkedAppointmentsByPatientIdHandler :
+    public class GetNotLinkedAppointmentsByPatientIdHandler :
         IRequestHandler<GetNotLinkedAppointmentsByPatientIdQuery, GetNotLinkedAppointmentsByPatientIdResponse>
     {
         private readonly IAppointmentRepository _appointmentRepository;
