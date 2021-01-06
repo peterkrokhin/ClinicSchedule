@@ -1,6 +1,6 @@
-namespace ClinicSchedule.Application
+namespace ClinicSchedule.Application.Services.Appointments.Queries.GetNotLinkedAppointmentsByPatientId
 {
-    public class GetNotLinkedAppointmentsByPatientNameResponse
+    public class Response
     {
         public int Id { get; set; }
         public int PatientId { get; set; }
