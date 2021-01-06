@@ -4,9 +4,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 
-using ClinicSchedule.Application;
 using EventsQuery = 
     ClinicSchedule.Application.Services.Events.Queries.GetAvailableDateEventsForAllPatientAppointments;
+using AppointmentsIdQuery = 
+    ClinicSchedule.Application.Services.Appointments.Queries.GetNotLinkedAppointmentsByPatientId;
+using AppointmentsNameQuery = 
+    ClinicSchedule.Application.Services.Appointments.Queries.GetNotLinkedAppointmentsByPatientName;
 
 namespace ClinicSchedule.Web
 {
@@ -23,21 +26,21 @@ namespace ClinicSchedule.Web
         }
 
         [HttpGet("{patientId:int}/notlinkedappointments")]
-        public async Task<ActionResult<IEnumerable<GetNotLinkedAppointmentsByPatientIdResponse>>> GetNotLinkedAppointmentsByPatientId(int patientId)
+        public async Task<ActionResult<IEnumerable<AppointmentsIdQuery::Response>>> GetNotLinkedAppointmentsByPatientId(int patientId)
         {
-            return Ok(await _mediator.Send(new GetNotLinkedAppointmentsByPatientIdQuery(patientId)));
+            return Ok(await _mediator.Send(new AppointmentsIdQuery::Query(patientId)));
         }
 
         [HttpGet("name={patientName:length(1, 100)}/notlinkedappointments")]
-        public async Task<ActionResult<IEnumerable<GetNotLinkedAppointmentsByPatientNameResponse>>> GetNotLinkedAppointmentsByPatientName(string patientName)
+        public async Task<ActionResult<IEnumerable<AppointmentsNameQuery::Response>>> GetNotLinkedAppointmentsByPatientName(string patientName)
         {
-            return Ok(await _mediator.Send(new GetNotLinkedAppointmentsByPatientNameQuery(patientName)));
+            return Ok(await _mediator.Send(new AppointmentsNameQuery::Query(patientName)));
         }
 
         [HttpGet("{patientId:int}/nearestavailabledate")]
-        public async Task<ActionResult<EventsQuery.Response>> GetAvailableDateEventsForAllPatientAppointments(int patientId)
+        public async Task<ActionResult<EventsQuery::Response>> GetAvailableDateEventsForAllPatientAppointments(int patientId)
         {
-            return await _mediator.Send(new EventsQuery.Query(patientId));
+            return await _mediator.Send(new EventsQuery::Query(patientId));
         }
     }
 }
