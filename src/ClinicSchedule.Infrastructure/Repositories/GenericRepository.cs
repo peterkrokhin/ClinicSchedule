@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System;
 using ClinicSchedule.Application;
+using System.Linq.Expressions;
 
 namespace ClinicSchedule.Infrastructure
 {
@@ -33,6 +34,12 @@ namespace ClinicSchedule.Infrastructure
         {
             DbSet.Update(entity);
         }
+
+        public async Task<T> Find(Expression<Func<T, bool>> predicate) =>
+            await DbSet.FindAsync(predicate);
+    
+        public async Task<IEnumerable<T>> FindMany(Expression<Func<T, bool>> predicate) =>
+            await DbSet.Where(predicate).ToListAsync();
 
         private bool disposed = false;
 

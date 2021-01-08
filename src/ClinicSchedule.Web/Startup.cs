@@ -26,7 +26,8 @@ namespace ClinicSchedule.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().
+                AddNewtonsoftJson();
 
             services.AddAppServices();
 
@@ -38,7 +39,6 @@ namespace ClinicSchedule.Web
             {
                 options.CustomSchemaIds(type => type.ToString());
             });
-
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

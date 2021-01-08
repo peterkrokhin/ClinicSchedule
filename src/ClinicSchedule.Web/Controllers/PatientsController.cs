@@ -10,6 +10,9 @@ using AppointmentsIdQuery =
     ClinicSchedule.Application.Services.Appointments.Queries.GetNotLinkedAppointmentsByPatientId;
 using AppointmentsNameQuery = 
     ClinicSchedule.Application.Services.Appointments.Queries.GetNotLinkedAppointmentsByPatientName;
+using Microsoft.AspNetCore.JsonPatch;
+using ClinicSchedule.Core;
+using ClinicSchedule.Application;
 
 namespace ClinicSchedule.Web
 {
@@ -41,6 +44,22 @@ namespace ClinicSchedule.Web
         public async Task<ActionResult<EventsQuery::Response>> GetAvailableDateEventsForAllPatientAppointments(int patientId)
         {
             return await _mediator.Send(new EventsQuery::Query(patientId));
+        }
+
+        [HttpGet("appointments")]
+        public async Task<ActionResult<IEnumerable<FindManyAppointmentsResponse>>> Get(int patientId, bool isLinked)
+        {
+            var appointments = await _mediator.Send(new FindManyAppointmentsQuery(patientId, isLinked));
+            return Ok(appointments);
+        }
+
+
+        [HttpPatch]
+        public IActionResult TestPatch([FromBody] JsonPatchDocument<Event> doc)
+        {
+            var evnt = new Event();
+            doc.ApplyTo(evnt);
+            return Ok(evnt);
         }
     }
 }
