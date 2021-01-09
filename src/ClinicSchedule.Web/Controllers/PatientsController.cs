@@ -47,9 +47,10 @@ namespace ClinicSchedule.Web
         }
 
         [HttpGet("appointments")]
-        public async Task<ActionResult<IEnumerable<FindManyAppointmentsResponse>>> Get(int patientId, bool isLinked)
+        public async Task<ActionResult<IEnumerable<FindManyAppointmentsResponse>>> Get(int? patientId, 
+            string patientName, bool? isLinked)
         {
-            var appointments = await _mediator.Send(new FindManyAppointmentsQuery(patientId, isLinked));
+            var appointments = await _mediator.Send(new FindManyAppointmentsQuery(patientId, patientName, isLinked));
             return Ok(appointments);
         }
 

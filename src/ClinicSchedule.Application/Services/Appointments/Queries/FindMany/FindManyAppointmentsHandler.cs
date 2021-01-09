@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using ClinicSchedule.Core;
 using MediatR;
+using ClinicSchedule.Core;
 
 namespace ClinicSchedule.Application
 {
