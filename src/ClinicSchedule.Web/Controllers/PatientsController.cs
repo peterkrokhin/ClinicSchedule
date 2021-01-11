@@ -4,21 +4,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 
-using EventsQuery = 
-    ClinicSchedule.Application.Services.Events.Queries.GetAvailableDateEventsForAllPatientAppointments;
-using AppointmentsIdQuery = 
-    ClinicSchedule.Application.Services.Appointments.Queries.GetNotLinkedAppointmentsByPatientId;
-using AppointmentsNameQuery = 
-    ClinicSchedule.Application.Services.Appointments.Queries.GetNotLinkedAppointmentsByPatientName;
-using Microsoft.AspNetCore.JsonPatch;
-using ClinicSchedule.Core;
 using ClinicSchedule.Application;
 
 namespace ClinicSchedule.Web
 {
     [ApiController]
     [ApiConventionType(typeof(DefaultApiConventions))]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class PatientsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -29,38 +21,21 @@ namespace ClinicSchedule.Web
         }
 
         [HttpGet("{patientId:int}/notlinkedappointments")]
-        public async Task<ActionResult<IEnumerable<AppointmentsIdQuery::Response>>> GetNotLinkedAppointmentsByPatientId(int patientId)
+        public async Task<ActionResult<IEnumerable<FindManyAppointmentsResponse>>> FindManyAppointmentsByPatientId(int patientId)
         {
-            return Ok(await _mediator.Send(new AppointmentsIdQuery::Query(patientId)));
+            return Ok(await _mediator.Send(new FindManyAppointmentsQuery(){PatientId = patientId, IsLinked = false}));
         }
 
         [HttpGet("name={patientName:length(1, 100)}/notlinkedappointments")]
-        public async Task<ActionResult<IEnumerable<AppointmentsNameQuery::Response>>> GetNotLinkedAppointmentsByPatientName(string patientName)
+        public async Task<ActionResult<IEnumerable<FindManyAppointmentsResponse>>> FindManyAppointmentsByPatientName(string patientName)
         {
-            return Ok(await _mediator.Send(new AppointmentsNameQuery::Query(patientName)));
+            return Ok(await _mediator.Send(new FindManyAppointmentsQuery(){PatientName = patientName, IsLinked = false}));
         }
 
-        [HttpGet("{patientId:int}/nearestavailabledate")]
-        public async Task<ActionResult<EventsQuery::Response>> GetAvailableDateEventsForAllPatientAppointments(int patientId)
+        [HttpGet("{patientId:int}/suitabledate")]
+        public async Task<ActionResult<FindSuitableDateResponse>> FindSuitableDateForAllNotLinledPatientAppointments(int patientId)
         {
-            return await _mediator.Send(new EventsQuery::Query(patientId));
-        }
-
-        [HttpGet("appointments")]
-        public async Task<ActionResult<IEnumerable<FindManyAppointmentsResponse>>> Get(int? patientId, 
-            string patientName, bool? isLinked)
-        {
-            var appointments = await _mediator.Send(new FindManyAppointmentsQuery(patientId, patientName, isLinked));
-            return Ok(appointments);
-        }
-
-
-        [HttpPatch]
-        public IActionResult TestPatch([FromBody] JsonPatchDocument<Event> doc)
-        {
-            var evnt = new Event();
-            doc.ApplyTo(evnt);
-            return Ok(evnt);
+            return await _mediator.Send(new FindSuitableDateQuery(patientId));
         }
     }
 }

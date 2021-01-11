@@ -35,10 +35,7 @@ namespace ClinicSchedule.Web
             services.AddAppInfrastructure(connectionString);
 
             services.AddScoped<IQuerryAggregator, QuerryAggregator>();
-            services.AddSwaggerGen(options =>
-            {
-                options.CustomSchemaIds(type => type.ToString());
-            });
+            services.AddSwaggerGen();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
