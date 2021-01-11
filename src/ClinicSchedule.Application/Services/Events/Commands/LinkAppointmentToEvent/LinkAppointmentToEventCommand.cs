@@ -2,15 +2,15 @@ using MediatR;
 
 namespace ClinicSchedule.Application
 {
-    public class LinkAppointmentToEventCommand : IRequest<int>
+    public class LinkAppointmentToEventCommand : IRequest
     {
-        private readonly int _appointmentId;
-        private readonly int _eventId;
+        public int AppointmentId { get; set; }
+        public int EventId { get; private set; }
 
         public LinkAppointmentToEventCommand(int appointmemtId, int eventId)
         {
-            _appointmentId = appointmemtId;
-            _eventId = eventId;
+            AppointmentId = appointmemtId;
+            EventId = eventId;
         }
     }
 }
