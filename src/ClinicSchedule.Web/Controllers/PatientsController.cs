@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 
@@ -33,7 +32,7 @@ namespace ClinicSchedule.Web
         }
 
         [HttpGet("{patientId:int}/suitabledate")]
-        public async Task<ActionResult<FindSuitableDateResponse>> FindSuitableDateForAllNotLinledPatientAppointments(int patientId)
+        public async Task<ActionResult<FindSuitableDateResponse>> FindSuitableDateForAllNotLinkedPatientAppointments(int patientId)
         {
             return await _mediator.Send(new FindSuitableDateQuery(patientId));
         }

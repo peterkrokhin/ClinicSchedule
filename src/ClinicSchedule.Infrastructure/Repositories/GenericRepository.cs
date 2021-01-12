@@ -36,7 +36,7 @@ namespace ClinicSchedule.Infrastructure
         }
 
         public async Task<T> Find(Expression<Func<T, bool>> predicate) =>
-            await DbSet.FindAsync(predicate);
+            await DbSet.Where(predicate).FirstOrDefaultAsync();
     
         public async Task<IEnumerable<T>> FindMany(Expression<Func<T, bool>> predicate) =>
             await DbSet.Where(predicate).ToListAsync();
