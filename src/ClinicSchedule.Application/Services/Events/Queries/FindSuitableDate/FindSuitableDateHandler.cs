@@ -51,8 +51,8 @@ namespace ClinicSchedule.Application
             {
                 Date = group?.Key.Date,
                 EventList = group?.ToList() != null ? 
-                    _mapper.Map<IEnumerable<Event>, IEnumerable<EventResponse>>(group.ToList()) : 
-                    new List<EventResponse>(),
+                    _mapper.Map<IEnumerable<Event>, IEnumerable<SuitableEvent>>(group.ToList()) : 
+                    new List<SuitableEvent>(),
             };
                 
 

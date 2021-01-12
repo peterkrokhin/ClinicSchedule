@@ -10,14 +10,10 @@ namespace ClinicSchedule.Infrastructure
     public class UnitOfWork : IUnitOfWork
     {
         private IAppDbContext DbContext { get; set; }
-        public IAppointmentRepository Appointments { get; set; }
-        public IEventRepository Events { get; set; }
 
         public UnitOfWork(IAppDbContext appDbContext)
         {
             DbContext = appDbContext;
-            Appointments = new AppointmentRepository(appDbContext);
-            Events = new EventRepository(appDbContext);
         }
 
         public async Task SaveChangesAsync()
@@ -35,8 +31,6 @@ namespace ClinicSchedule.Infrastructure
             if(disposing)
             {
                 DbContext?.Dispose();
-                Appointments?.Dispose();
-                Events?.Dispose();
                 // Console.WriteLine($"object {this.ToString()} Dispose"); // Проверка работы Dispose()
             }
 

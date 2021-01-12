@@ -1,8 +1,8 @@
 using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace ClinicSchedule.Application
 {

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.JsonPatch;
 using MediatR;
 using ClinicSchedule.Application;
+using ClinicSchedule.Core;
 
 namespace ClinicSchedule.Web
 {
@@ -19,12 +20,15 @@ namespace ClinicSchedule.Web
         }
 
         [HttpPatch("{eventId:int}")]
-        public async Task<ActionResult> LinkAppointmentToEvent([FromBody] JsonPatchDocument<EventPatchDTO> doc, int eventId)
+        public async Task<ActionResult> LinkAppointmentToEvent([FromBody] JsonPatchDocument<Event> doc, int eventId)
         {
-            var evnt = new EventPatchDTO();
+            var evnt = new Event();
             doc.ApplyTo(evnt, ModelState);
 
-            await _mediator.Send(new LinkAppointmentToEventCommand(evnt.AppointmentId, eventId));
+            if (evnt.AppointmentId == null)
+                return BadRequest();
+
+            await _mediator.Send(new LinkAppointmentToEventCommand(evnt.AppointmentId.Value, eventId));
             return NoContent();
         }
     }

@@ -34,7 +34,6 @@ namespace ClinicSchedule.Web
             string connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddAppInfrastructure(connectionString);
 
-            services.AddScoped<IQuerryAggregator, QuerryAggregator>();
             services.AddSwaggerGen();
         }
 

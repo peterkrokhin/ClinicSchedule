@@ -2,7 +2,7 @@
 
 namespace ClinicSchedule.Application
 {
-    public class EventResponse
+    public class SuitableEvent
     {
         public int Id { get; set; }
         public DateTime DateTime { get; set; }

@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -43,7 +42,7 @@ namespace ClinicSchedule.Application
 
             evnt.AppointmentId = command.AppointmentId;
 
-            _uow.Events.Update(evnt);
+            _events.Update(evnt);
             await _uow.SaveChangesAsync();
         }
     }

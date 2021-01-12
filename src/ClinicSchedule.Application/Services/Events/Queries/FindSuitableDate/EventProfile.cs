@@ -7,7 +7,7 @@ namespace ClinicSchedule.Application
     {
         public EventProfile()
         {
-            CreateMap<Event, EventResponse>();
+            CreateMap<Event, SuitableEvent>();
         }
     }
 }
