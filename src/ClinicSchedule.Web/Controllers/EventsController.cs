@@ -6,7 +6,6 @@ using MediatR;
 using ClinicSchedule.Application;
 using ClinicSchedule.Core;
 
-
 namespace ClinicSchedule.Web
 {
     [ApiController]

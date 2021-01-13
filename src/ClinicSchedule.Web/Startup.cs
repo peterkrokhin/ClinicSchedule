@@ -26,6 +26,7 @@ namespace ClinicSchedule.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // Поддержка Json Patch
             services.AddControllers().
                 AddNewtonsoftJson();
 
@@ -39,10 +40,7 @@ namespace ClinicSchedule.Web
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            app.UseExceptionHandler("/api/errors");
 
             app.UseSwagger();
             app.UseSwaggerUI(c => 

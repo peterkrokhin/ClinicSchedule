@@ -33,7 +33,7 @@ namespace ClinicSchedule.Application
             if (evnt.AppointmentId != null)
                 throw new EventNotAvailableException($"Событие с id={evnt.Id} уже занято.");
 
-            // Пересмотреть
+            // Оптимизировать
             if (await _events.Find(command.GetEventPredicate()) != null)
                 throw new AppointmentAlreadyLinkedException($"Назначение с id={command.AppointmentId} уже привязано.");
 
