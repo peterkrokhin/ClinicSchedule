@@ -1,9 +1,11 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.JsonPatch;
+using FluentValidation.AspNetCore;
 using MediatR;
 using ClinicSchedule.Application;
 using ClinicSchedule.Core;
+
 
 namespace ClinicSchedule.Web
 {
@@ -19,17 +21,21 @@ namespace ClinicSchedule.Web
             _mediator = mediator;
         }
 
-        [HttpPatch("{eventId:int}")]
+        [HttpPatch("{eventId:int:min(1)}")]
         public async Task<ActionResult> LinkAppointmentToEvent([FromBody] JsonPatchDocument<Event> doc, int eventId)
         {
             var evnt = new Event();
             doc.ApplyTo(evnt, ModelState);
 
-            if (evnt.AppointmentId == null)
-                return BadRequest();
+            var command = new LinkAppointmentToEventCommand(evnt.AppointmentId, eventId);
+            var results = command.Validate();
+            results.AddToModelState(ModelState, null);
 
-            await _mediator.Send(new LinkAppointmentToEventCommand(evnt.AppointmentId.Value, eventId));
-            return NoContent();
+            if (!ModelState.IsValid)
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            
+            await _mediator.Send(command);
+            return Ok();
         }
     }
 }

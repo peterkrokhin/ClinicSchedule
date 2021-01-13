@@ -20,7 +20,7 @@ namespace ClinicSchedule.Application
 
         protected override async Task Handle(LinkAppointmentToEventCommand command, CancellationToken cancellationToken)
         {
-            var appointment = await _appointments.GetByIdAsync(command.AppointmentId);
+            var appointment = await _appointments.GetByIdAsync(command.AppointmentId.Value);
 
             if (appointment == null)
                 throw new AppointmentNotFoundException($"Назначение с id={command.AppointmentId} не найдено.");

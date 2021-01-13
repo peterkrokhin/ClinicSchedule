@@ -19,7 +19,7 @@ namespace ClinicSchedule.Web
             _mediator = mediator;
         }
 
-        [HttpGet("{patientId:int}/notlinkedappointments")]
+        [HttpGet("{patientId:int:min(1)}/notlinkedappointments")]
         public async Task<ActionResult<IEnumerable<FindManyAppointmentsResponse>>> FindManyAppointmentsByPatientId(int patientId)
         {
             return Ok(await _mediator.Send(new FindManyAppointmentsQuery(){PatientId = patientId, IsLinked = false}));
@@ -31,7 +31,7 @@ namespace ClinicSchedule.Web
             return Ok(await _mediator.Send(new FindManyAppointmentsQuery(){PatientName = patientName, IsLinked = false}));
         }
 
-        [HttpGet("{patientId:int}/suitabledate")]
+        [HttpGet("{patientId:int:min(1)}/suitabledate")]
         public async Task<ActionResult<FindSuitableDateResponse>> FindSuitableDateForAllNotLinkedPatientAppointments(int patientId)
         {
             return await _mediator.Send(new FindSuitableDateQuery(patientId));
