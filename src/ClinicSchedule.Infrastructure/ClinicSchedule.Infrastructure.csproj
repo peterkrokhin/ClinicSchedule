@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameWorkCore.Sqlite" Version="5.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameWorkCore.Sqlite" Version="3.1.11" />
   </ItemGroup>
 
   <ItemGroup>
