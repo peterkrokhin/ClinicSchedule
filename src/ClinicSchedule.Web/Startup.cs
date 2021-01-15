@@ -42,6 +42,8 @@ namespace ClinicSchedule.Web
         {
             app.UseExceptionHandler("/api/errors");
 
+            app.UseMiddleware<RequestResponseLogMiddleware>();
+
             app.UseSwagger();
             app.UseSwaggerUI(c => 
             {
