@@ -40,9 +40,9 @@ namespace ClinicSchedule.Web
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseExceptionHandler("/api/errors");
-
             app.UseMiddleware<RequestResponseLogMiddleware>();
+
+            app.UseExceptionHandler("/api/errors");
 
             app.UseSwagger();
             app.UseSwaggerUI(c => 
