@@ -3,17 +3,19 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace ClinicSchedule.Web
 {
     class RequestResponseLogMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger<RequestResponseLogMiddleware> _logger;
 
-        public RequestResponseLogMiddleware(RequestDelegate next)
+        public RequestResponseLogMiddleware(RequestDelegate next, ILogger<RequestResponseLogMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -21,8 +23,8 @@ namespace ClinicSchedule.Web
             DateTime requestTime = DateTime.Now;
             DateTime responseTime;
 
-            string requestBodyStr = "";
-            string responseBodyStr = "";
+            string requestBodyStr;
+            string responseBodyStr;
             
             var request = context.Request;
             request.EnableBuffering();
@@ -40,6 +42,8 @@ namespace ClinicSchedule.Web
                     request.Body.Position = 0;
                 }
 
+                _logger.LogInformation("Request body: {requestBodyStr}", requestBodyStr != String.Empty ? requestBodyStr : "none");
+
                 await _next.Invoke(context);
 
                 responseBodyMemoryStream.Position = 0;
@@ -52,14 +56,8 @@ namespace ClinicSchedule.Web
                 }
 
                 responseTime = DateTime.Now;
+                _logger.LogInformation("Response body: {responseBodyStr}", responseBodyStr != String.Empty ? responseBodyStr : "none");
             }
-
-            // Console.WriteLine($"Time: {requestTime:HH:mm:ss:ffffff}; " + 
-            //         $"Request: Scheme={request.Scheme}, Host={request.Host}, Path={request.Path}, QueryString={request.QueryString}, Body={requestBodyStr}");
-
-            // Console.WriteLine($"Time: {responseTime:HH:mm:ss:ffffff}; " +
-            //         $"Response: Status={response.StatusCode}, Body={responseBodyStr}; Request-Response Duration: {responseTime - requestTime}");
-            
         }
     }
 }

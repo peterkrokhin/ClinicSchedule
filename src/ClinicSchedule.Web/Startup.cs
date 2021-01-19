@@ -7,12 +7,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Serilog;
 
 using ClinicSchedule.Core;
 using ClinicSchedule.Application;
 using ClinicSchedule.Infrastructure;
-using Microsoft.Extensions.Configuration;
+
 
 namespace ClinicSchedule.Web
 {
@@ -41,8 +43,8 @@ namespace ClinicSchedule.Web
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // app.UseMiddleware<RequestResponseLogMiddleware>();
             app.UseSerilogRequestLogging();
+            app.UseMiddleware<RequestResponseLogMiddleware>();
 
             app.UseExceptionHandler("/api/errors");
 
