@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Serilog;
 
 namespace ClinicSchedule.Web
 {
@@ -53,11 +54,12 @@ namespace ClinicSchedule.Web
                 responseTime = DateTime.Now;
             }
 
-            Console.WriteLine($"Time: {requestTime:HH:mm:ss:ffffff}; " + 
-                    $"Request: Scheme={request.Scheme}, Host={request.Host}, Path={request.Path}, QueryString={request.QueryString}, Body={requestBodyStr}");
+            // Console.WriteLine($"Time: {requestTime:HH:mm:ss:ffffff}; " + 
+            //         $"Request: Scheme={request.Scheme}, Host={request.Host}, Path={request.Path}, QueryString={request.QueryString}, Body={requestBodyStr}");
 
-            Console.WriteLine($"Time: {responseTime:HH:mm:ss:ffffff}; " +
-                    $"Response: Status={response.StatusCode}, Body={responseBodyStr}; Request-Response Duration: {responseTime - requestTime}");
+            // Console.WriteLine($"Time: {responseTime:HH:mm:ss:ffffff}; " +
+            //         $"Response: Status={response.StatusCode}, Body={responseBodyStr}; Request-Response Duration: {responseTime - requestTime}");
+            
         }
     }
 }
