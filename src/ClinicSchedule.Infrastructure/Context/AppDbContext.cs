@@ -18,7 +18,7 @@ namespace ClinicSchedule.Infrastructure
         {
         }
 
-        // Методы Set<T>(), SaveChangesAsync() берем из базового класса
+        // Метод Set<T>() берем из базового класса
         public new DbSet<T> Set<T>() where T : class
         {
             return base.Set<T>();

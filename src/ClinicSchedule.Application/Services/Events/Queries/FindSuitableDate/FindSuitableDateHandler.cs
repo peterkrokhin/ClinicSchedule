@@ -54,8 +54,6 @@ namespace ClinicSchedule.Application
                     _mapper.Map<IEnumerable<Event>, IEnumerable<SuitableEvent>>(group.ToList()) : 
                     new List<SuitableEvent>(),
             };
-                
-
         }
     }
 }

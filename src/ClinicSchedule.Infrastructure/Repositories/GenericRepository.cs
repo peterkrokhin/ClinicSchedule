@@ -1,17 +1,16 @@
-using ClinicSchedule.Core;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using System;
-using ClinicSchedule.Application;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using ClinicSchedule.Application;
 
 namespace ClinicSchedule.Infrastructure
 {
     abstract public class GenericRepository<T> : IGenericRepository<T> where T:class
     {
-        public IAppDbContext DbContext { get; set; }
+        protected IAppDbContext DbContext { get; set; }
         protected DbSet<T> DbSet { get; set; }
 
         public GenericRepository(IAppDbContext appDbContext)
@@ -51,7 +50,6 @@ namespace ClinicSchedule.Infrastructure
             if(disposing)
             {
                 DbContext?.Dispose();
-                // Console.WriteLine($"object {this.ToString()} Dispose"); // Проверка работы Dispose()
             }
             
             disposed = true;

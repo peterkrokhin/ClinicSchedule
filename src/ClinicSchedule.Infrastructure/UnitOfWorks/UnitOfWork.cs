@@ -31,7 +31,6 @@ namespace ClinicSchedule.Infrastructure
             if(disposing)
             {
                 DbContext?.Dispose();
-                // Console.WriteLine($"object {this.ToString()} Dispose"); // Проверка работы Dispose()
             }
 
             disposed = true;
@@ -42,7 +41,6 @@ namespace ClinicSchedule.Infrastructure
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
     }
 }
 

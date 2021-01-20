@@ -14,11 +14,26 @@ namespace ClinicSchedule.Web
             var exception = context.Error;
             var code = 500; // Internal Server Error by default
 
-            if  (exception is AppointmentNotFoundException) code = 404;
-            else if (exception is EventNotFoundException) code = 404;
-            else if (exception is AppointmentAlreadyLinkedException) code = 400;
-            else if (exception is EventNotAvailableException) code = 400;
-            else if (exception is ServicesAppointmentEventDontMatchException) code = 400;
+            if  (exception is AppointmentNotFoundException)
+            {
+                code = 404;
+            }
+            else if (exception is EventNotFoundException)
+            {
+                code = 404;
+            }
+            else if (exception is AppointmentAlreadyLinkedException)
+            {
+                code = 400;
+            }
+            else if (exception is EventNotAvailableException)
+            {
+                code = 400;
+            }
+            else if (exception is ServicesAppointmentEventDontMatchException)
+            {
+                code = 400;
+            }
 
             Response.StatusCode = code;
 
