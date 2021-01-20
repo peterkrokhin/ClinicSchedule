@@ -20,12 +20,6 @@ namespace ClinicSchedule.Web
 
         public async Task InvokeAsync(HttpContext context)
         {
-            DateTime requestTime = DateTime.Now;
-            DateTime responseTime;
-
-            string requestBodyStr;
-            string responseBodyStr;
-            
             var request = context.Request;
             request.EnableBuffering();
 
@@ -38,25 +32,27 @@ namespace ClinicSchedule.Web
 
                 using (var streamReader = new StreamReader(request.Body, Encoding.UTF8, true, 1024, true))
                 {
-                    requestBodyStr = await streamReader.ReadToEndAsync();
+                    string requestBodyStr = await streamReader.ReadToEndAsync();
                     request.Body.Position = 0;
-                }
 
-                _logger.LogInformation("Request body: {requestBodyStr}", requestBodyStr != String.Empty ? requestBodyStr : "none");
+                    requestBodyStr = requestBodyStr != String.Empty ? requestBodyStr : "none";
+                    _logger.LogInformation("Request body: {requestBodyStr}", requestBodyStr);
+                }
 
                 await _next.Invoke(context);
 
                 responseBodyMemoryStream.Position = 0;
                 using (var streamReader = new StreamReader(responseBodyMemoryStream, Encoding.UTF8, true, 1024, true))
                 {
-                    responseBodyStr = await streamReader.ReadToEndAsync();
+                    string responseBodyStr = await streamReader.ReadToEndAsync();
                     responseBodyMemoryStream.Position = 0;
+
                     await responseBodyMemoryStream.CopyToAsync(originalResponseBody);
                     response.Body = originalResponseBody;
-                }
 
-                responseTime = DateTime.Now;
-                _logger.LogInformation("Response body: {responseBodyStr}", responseBodyStr != String.Empty ? responseBodyStr : "none");
+                    responseBodyStr = responseBodyStr != String.Empty ? responseBodyStr : "none";
+                     _logger.LogInformation("Response body: {responseBodyStr}", responseBodyStr);
+                }
             }
         }
     }
